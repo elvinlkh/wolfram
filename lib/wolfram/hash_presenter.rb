@@ -17,13 +17,19 @@ module Wolfram
 
     def pods_to_hash
       pods.inject Hash.new do |hash, pod|
-        hash.update pod.title => pod.subpods.map(&:plaintext)
+        hash.update pod.title => {
+          txt: pod.subpods.map(&:plaintext)[0], 
+          img: pod.subpods.map(&:img).map(&:attributes)[0]["src"].value
+        }
       end
     end
 
     def assumptions_to_hash
       assumptions.inject Hash.new do |hash, assumption|
-        hash.update assumption.name => assumption.values.map(&:desc)
+        hash.update assumption.name => {
+          txt: assumption.values.map(&:desc),
+          query: assumption.values.map(&:input)
+        }
       end
     end
 
